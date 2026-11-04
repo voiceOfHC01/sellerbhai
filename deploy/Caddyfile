@@ -1,0 +1,37 @@
+{$DOMAIN_NAME:app.yourdomain.com} {
+    # Encode responses
+    encode gzip zstd
+
+    # API and Webhooks proxy to FastAPI Backend
+    handle /api/* {
+        reverse_proxy backend:8000 {
+            header_up X-Forwarded-Proto {scheme}
+            header_up X-Real-IP {remote_host}
+        }
+    }
+
+    # Health check
+    handle /health {
+        reverse_proxy backend:8000
+    }
+
+    # Public Privacy Policy
+    handle /privacy* {
+        reverse_proxy backend:8000 {
+            rewrite /api/webhooks/meta/privacy-policy
+        }
+    }
+
+    # Frontend Single Page Application
+    handle {
+        reverse_proxy frontend:80
+    }
+
+    # Security Headers
+    header {
+        Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+        X-Content-Type-Options "nosniff"
+        X-Frame-Options "SAMEORIGIN"
+        Referrer-Policy "strict-origin-when-cross-origin"
+    }
+}
