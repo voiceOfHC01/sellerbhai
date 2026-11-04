@@ -17,9 +17,10 @@ import { AIReviewPage } from './pages/AIReviewPage';
 import { PrivacyPolicyPage } from './pages/PrivacyPolicyPage';
 
 const ProtectedLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const token = localStorage.getItem('replybd_token');
-  if (!token) {
-    return <Navigate to="/login" replace />;
+  // Single-Owner Private Direct Access (No login screen friction)
+  if (!localStorage.getItem('replybd_token')) {
+    localStorage.setItem('replybd_token', 'sellerbhai_owner_direct_token');
+    localStorage.setItem('replybd_user', JSON.stringify({ email: 'owner@sellerbhai.com', name: 'Store Owner' }));
   }
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col font-sans">
@@ -33,7 +34,7 @@ export const App: React.FC = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/login" element={<LoginPage />} />
+        <Route path="/login" element={<Navigate to="/dashboard" replace />} />
         <Route path="/privacy" element={<PrivacyPolicyPage />} />
         
         <Route

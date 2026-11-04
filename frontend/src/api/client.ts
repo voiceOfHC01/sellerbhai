@@ -9,23 +9,15 @@ const api = axios.create({
 });
 
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('replybd_token');
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
+  const token = localStorage.getItem('replybd_token') || 'sellerbhai_owner_direct_token';
+  config.headers.Authorization = `Bearer ${token}`;
   return config;
 });
 
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
-      localStorage.removeItem('replybd_token');
-      localStorage.removeItem('replybd_user');
-      if (window.location.pathname !== '/login') {
-        window.location.href = '/login';
-      }
-    }
+    // Private single-owner mode: Do not redirect to login on 401/network errors
     return Promise.reject(error);
   }
 );
