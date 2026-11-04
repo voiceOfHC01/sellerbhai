@@ -16,17 +16,58 @@ import { DashboardPage } from './pages/DashboardPage';
 import { AIReviewPage } from './pages/AIReviewPage';
 import { PrivacyPolicyPage } from './pages/PrivacyPolicyPage';
 
+// Single-Owner Private Direct Access (No login screen friction)
+class ErrorBoundary extends React.Component<{ children: React.ReactNode }, { hasError: boolean; error: any }> {
+  constructor(props: any) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+  static getDerivedStateFromError(error: any) {
+    return { hasError: true, error };
+  }
+  componentDidCatch(error: any, info: any) {
+    console.error("UI Error Caught:", error, info);
+  }
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="min-h-screen bg-slate-900 text-white flex flex-col items-center justify-center p-6 text-center">
+          <div className="w-12 h-12 rounded-xl bg-blue-600 flex items-center justify-center mb-4 text-xl font-bold">SB</div>
+          <h2 className="text-xl font-bold mb-2">SellerBhai Dashboard</h2>
+          <p className="text-slate-400 mb-4 text-sm">A temporary issue occurred while rendering this view.</p>
+          <button
+            onClick={() => { localStorage.clear(); window.location.href = '/'; }}
+            className="px-5 py-2.5 bg-blue-600 hover:bg-blue-500 rounded-lg text-sm font-semibold transition-all shadow-lg shadow-blue-500/20"
+          >
+            Reset Session & Reload
+          </button>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
 const ProtectedLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   // Single-Owner Private Direct Access (No login screen friction)
+  try {
+    const rawUser = localStorage.getItem('replybd_user');
+    if (!rawUser || rawUser === 'undefined' || rawUser === 'null') {
+      localStorage.setItem('replybd_user', JSON.stringify({ email: 'owner@sellerbhai.com', name: 'Store Owner' }));
+    }
+  } catch {
+    // Ignore storage issues
+  }
   if (!localStorage.getItem('replybd_token')) {
     localStorage.setItem('replybd_token', 'sellerbhai_owner_direct_token');
-    localStorage.setItem('replybd_user', JSON.stringify({ email: 'owner@sellerbhai.com', name: 'Store Owner' }));
   }
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col font-sans">
-      <Navbar />
-      <main className="flex-1">{children}</main>
-    </div>
+    <ErrorBoundary>
+      <div className="min-h-screen bg-slate-50 flex flex-col font-sans">
+        <Navbar />
+        <main className="flex-1">{children}</main>
+      </div>
+    </ErrorBoundary>
   );
 };
 

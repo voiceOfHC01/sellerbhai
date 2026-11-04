@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { apiClient } from '../api/client';
 import { DashboardStats } from '../types';
 import { 
   BarChart3, MessageSquare, Bot, User, ShoppingBag, Clock, 
-  DollarSign, Sparkles, TrendingUp, RefreshCw, Facebook, Instagram, Phone, ArrowUpRight
+  DollarSign, Sparkles, TrendingUp, RefreshCw, Facebook, Instagram, Phone, ArrowUpRight, Share2
 } from 'lucide-react';
 
 export const DashboardPage: React.FC = () => {
@@ -69,6 +70,32 @@ export const DashboardPage: React.FC = () => {
             <span>Refresh</span>
           </button>
         </div>
+      </div>
+
+      {/* Meta Facebook & Instagram Automation Connection Banner */}
+      <div className="bg-gradient-to-r from-blue-700 via-indigo-600 to-pink-600 rounded-2xl p-6 text-white shadow-lg flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+        <div className="space-y-1.5">
+          <div className="flex items-center gap-2">
+            <span className="px-2.5 py-0.5 rounded-full bg-white/20 text-xs font-semibold backdrop-blur">
+              Meta AI Automation
+            </span>
+            <span className="text-xs text-blue-100 flex items-center gap-1">
+              <Facebook className="w-3.5 h-3.5" /> Facebook Page & <Instagram className="w-3.5 h-3.5" /> Instagram DM
+            </span>
+          </div>
+          <h2 className="text-xl font-bold tracking-tight">Connect Your Facebook Page & Instagram Account</h2>
+          <p className="text-sm text-blue-100 max-w-2xl leading-relaxed">
+            Link your Facebook business page or Instagram to let SellerBhai AI answer customer messages, check live product stock, share prices, and take orders automatically.
+          </p>
+        </div>
+        <Link
+          to="/settings"
+          className="px-5 py-3 rounded-xl bg-white text-blue-700 hover:bg-blue-50 font-bold text-sm shadow transition-all flex items-center gap-2 whitespace-nowrap"
+        >
+          <Share2 className="w-4 h-4" />
+          <span>Connect Facebook & Instagram</span>
+          <ArrowUpRight className="w-4 h-4" />
+        </Link>
       </div>
 
       {/* 5 Core Metric Cards */}

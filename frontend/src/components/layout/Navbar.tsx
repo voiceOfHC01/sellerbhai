@@ -1,10 +1,18 @@
 import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { Package, BookOpen, MessageSquare, Settings as SettingsIcon, LogOut, Sparkles, ShoppingBag, Inbox, MessageCircle, Phone, Calendar, Send, BarChart3, CheckSquare } from 'lucide-react';
+import { Package, BookOpen, MessageSquare, Settings as SettingsIcon, LogOut, Sparkles, ShoppingBag, Inbox, MessageCircle, Phone, Calendar, Send, BarChart3, CheckSquare, Share2 } from 'lucide-react';
 
 export const Navbar: React.FC = () => {
   const navigate = useNavigate();
-  const user = JSON.parse(localStorage.getItem('replybd_user') || '{"email": "admin@replybd.com"}');
+  let user = { email: 'owner@sellerbhai.com', name: 'Store Owner' };
+  try {
+    const raw = localStorage.getItem('replybd_user');
+    if (raw && raw !== 'undefined' && raw !== 'null') {
+      user = JSON.parse(raw);
+    }
+  } catch {
+    user = { email: 'owner@sellerbhai.com', name: 'Store Owner' };
+  }
 
   const handleLogout = () => {
     localStorage.removeItem('replybd_token');
@@ -29,7 +37,7 @@ export const Navbar: React.FC = () => {
               <ShoppingBag className="w-5 h-5" />
             </div>
             <div>
-              <span className="text-lg font-bold text-slate-900 tracking-tight">reply.bd</span>
+              <span className="text-lg font-bold text-slate-900 tracking-tight">SellerBhai</span>
               <span className="ml-1.5 px-1.5 py-0.5 rounded text-[10px] font-semibold tracking-wide bg-blue-100 text-blue-700">AI AGENT</span>
             </div>
           </div>
@@ -82,8 +90,8 @@ export const Navbar: React.FC = () => {
               <span>AI Review</span>
             </NavLink>
             <NavLink to="/settings" className={navItemClass}>
-              <SettingsIcon className="w-4 h-4" />
-              <span>Settings</span>
+              <Share2 className="w-4 h-4 text-blue-600" />
+              <span>Channels (FB/IG)</span>
             </NavLink>
           </nav>
         </div>
